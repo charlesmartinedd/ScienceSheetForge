@@ -1,14 +1,22 @@
 """
 Cell Hero Worksheet Generator
 
-This example creates a fun "Super Cell Heroes" worksheet using free APIs.
+This example creates a fun "Super Cell Heroes" worksheet with AI-generated content.
 Students learn about immune system cells through superhero characters!
 """
+
+import sys
+import os
+
+# Add parent directory to path to import generators and config
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import requests
 import random
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
+from generators.ai_content_generator import generate_worksheet_content
+from config import USE_AI_CONTENT
 
 
 # Cell Hero data
@@ -325,13 +333,25 @@ def generate_immune_response_chart():
     return create_fallback_chart()
 
 
-def create_cell_hero_worksheet(output_filename="cell_hero_worksheet.png"):
+def create_cell_hero_worksheet(output_filename="cell_hero_worksheet.png", grade_level="3-5", use_ai=None):
     """
-    Create a complete Cell Hero worksheet
+    Create a complete Cell Hero worksheet with AI-generated content
 
     Args:
         output_filename (str): Output file name
+        grade_level (str): K-2, 3-5, or 6-8
+        use_ai (bool): Whether to use AI content generation (None = use config default)
     """
+    # Determine whether to use AI
+    if use_ai is None:
+        use_ai = USE_AI_CONTENT
+
+    # Generate content (AI or fallback)
+    content = generate_worksheet_content(grade_level=grade_level, use_ai=use_ai)
+    hero = content['hero']
+    scenario = content['scenario']
+    questions = content['questions']
+
     # Create worksheet canvas (8.5x11 inches at 150 DPI)
     width, height = 1275, 1650
     worksheet = Image.new('RGB', (width, height), 'white')
@@ -360,7 +380,6 @@ def create_cell_hero_worksheet(output_filename="cell_hero_worksheet.png"):
 
     # Generate and add character avatar
     print("Generating Cell Hero character...")
-    hero = random.choice(CELL_HEROES)
     character = generate_character_avatar(hero['name'])
 
     if character:
@@ -377,19 +396,12 @@ def create_cell_hero_worksheet(output_filename="cell_hero_worksheet.png"):
 
     # Scenario
     draw.text((100, y_offset), "🚨 EMERGENCY SCENARIO:", fill='#e74c3c', font=header_font)
-    scenario = random.choice(SCENARIOS)
     draw.text((100, y_offset + 50), scenario, fill='#34495e', font=text_font)
 
     y_offset += 120
 
     # Questions section
     draw.text((100, y_offset), "📝 MISSION QUESTIONS:", fill='#9b59b6', font=header_font)
-
-    questions = [
-        f"1. How would {hero['name']} respond to this threat?",
-        "2. What other immune cells might help?",
-        "3. How long would it take to defeat the invader?",
-    ]
 
     y_offset += 50
     for question in questions:
@@ -429,6 +441,13 @@ if __name__ == "__main__":
     print("🔬 Cell Hero Worksheet Generator 🔬")
     print("=" * 50)
 
+    # Show AI status
+    if USE_AI_CONTENT:
+        print("🤖 AI Content Generation: ENABLED")
+    else:
+        print("📋 AI Content Generation: DISABLED (using templates)")
+    print()
+
     # Generate a single worksheet
     create_cell_hero_worksheet()
 
@@ -436,3 +455,6 @@ if __name__ == "__main__":
     print("\nTo generate multiple variations, run:")
     print("  for i in range(10):")
     print("      create_cell_hero_worksheet(f'worksheet_{i}.png')")
+    print("\nTo use different grade levels:")
+    print("  create_cell_hero_worksheet('k2_worksheet.png', grade_level='K-2')")
+    print("  create_cell_hero_worksheet('middle_worksheet.png', grade_level='6-8')")
