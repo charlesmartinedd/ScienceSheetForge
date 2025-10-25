@@ -22,8 +22,40 @@ except ImportError as e:
     from generators.crossword_generator import generate_crossword_tpt_style as generate_crossword
     print(f"Using standard crossword generator: {e}")
 
-from generators.word_search_generator import generate_word_search
-from generators.matching_generator import generate_matching
+try:
+    from generators.word_search_smart import generate_word_search
+    print("Using smart word search generator")
+except ImportError as e:
+    from generators.word_search_generator import generate_word_search
+    print(f"Using standard word search generator: {e}")
+
+try:
+    from generators.matching_smart import generate_matching
+    print("Using smart matching generator")
+except ImportError as e:
+    from generators.matching_generator import generate_matching
+    print(f"Using standard matching generator: {e}")
+
+try:
+    from generators.fill_in_blank import generate_fill_in_blank
+    print("Using fill-in-blank generator")
+except ImportError as e:
+    print(f"Fill-in-blank generator not available: {e}")
+    generate_fill_in_blank = None
+
+try:
+    from generators.short_answer import generate_short_answer
+    print("Using short answer generator")
+except ImportError as e:
+    print(f"Short answer generator not available: {e}")
+    generate_short_answer = None
+
+try:
+    from generators.true_false import generate_true_false
+    print("Using true/false generator")
+except ImportError as e:
+    print(f"True/false generator not available: {e}")
+    generate_true_false = None
 
 app = Flask(__name__)
 app.config['OUTPUT_FOLDER'] = os.path.join(os.path.dirname(__file__), 'output')
@@ -76,8 +108,14 @@ def generate():
             generate_word_search(standard_data, grade_level, output_filename)
         elif worksheet_format == 'matching':
             generate_matching(standard_data, grade_level, output_filename)
+        elif worksheet_format == 'fill-blank' and generate_fill_in_blank:
+            generate_fill_in_blank(standard_data, grade_level, output_filename)
+        elif worksheet_format == 'short-answer' and generate_short_answer:
+            generate_short_answer(standard_data, grade_level, output_filename)
+        elif worksheet_format == 'true-false' and generate_true_false:
+            generate_true_false(standard_data, grade_level, output_filename)
         else:
-            # Default to word search for now
+            # Default to word search if format not implemented
             generate_word_search(standard_data, grade_level, output_filename)
 
         answer_key_filename = output_filename.replace('.png', '_ANSWER_KEY.png')
