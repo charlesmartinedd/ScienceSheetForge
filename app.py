@@ -13,7 +13,15 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from ngss_standards import NGSS_STANDARDS
 from worksheet_formats import WORKSHEET_FORMATS
-from generators.crossword_generator import generate_crossword_tpt_style as generate_crossword
+
+# Try to import smart generators first, fallback to regular ones
+try:
+    from generators.crossword_smart import generate_crossword_tpt_style as generate_crossword
+    print("Using smart crossword generator")
+except ImportError as e:
+    from generators.crossword_generator import generate_crossword_tpt_style as generate_crossword
+    print(f"Using standard crossword generator: {e}")
+
 from generators.word_search_generator import generate_word_search
 from generators.matching_generator import generate_matching
 
