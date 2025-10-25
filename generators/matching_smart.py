@@ -77,7 +77,12 @@ def generate_matching(standard_data, grade_level, output_filename="matching.png"
 
     # Generate vocabulary
     print("   Generating vocabulary...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=12)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=12,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Select 10 words for matching
     selected = vocabulary[:10]

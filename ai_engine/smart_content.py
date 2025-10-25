@@ -5,7 +5,7 @@ Creates unique, engaging content every time
 """
 
 import random
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Optional
 
 
 class SmartContentEngine:
@@ -151,6 +151,210 @@ class SmartContentEngine:
                 "kid_friendly": "The air we breathe that keeps us alive",
                 "fun_fact": "Oxygen makes up 21% of the air we breathe!",
                 "example": "Your body needs oxygen like a fire needs air to keep burning."
+            },
+            "weathering": {
+                "definition": "The breaking down of rocks into smaller pieces by wind, water, or ice",
+                "kid_friendly": "When weather slowly breaks rocks apart",
+                "fun_fact": "Tree roots can weather rocks by growing into cracks.",
+                "example": "Rainwater freezes in rock cracks and causes weathering."
+            },
+            "erosion": {
+                "definition": "Movement of weathered rock and soil by water, wind, gravity, or ice",
+                "kid_friendly": "When bits of earth get carried away",
+                "fun_fact": "The Grand Canyon was carved deeper every year by erosion.",
+                "example": "Ocean waves erode beaches and move sand down the shore."
+            },
+            "sediment": {
+                "definition": "Small particles of rock, soil, or organic matter dropped by erosion",
+                "kid_friendly": "Tiny pieces of rock that settle in layers",
+                "fun_fact": "Sediment layers can trap fossils for millions of years.",
+                "example": "Sediment collects at the bottom of rivers and forms deltas."
+            },
+            "magma": {
+                "definition": "Molten rock located beneath Earth's crust",
+                "kid_friendly": "Hot melted rock deep underground",
+                "fun_fact": "Magma chambers can be as wide as entire cities.",
+                "example": "Magma rises toward the surface and erupts from volcanoes."
+            },
+            "lava": {
+                "definition": "Molten rock that erupts onto Earth's surface",
+                "kid_friendly": "Melted rock that flows out of a volcano",
+                "fun_fact": "Lava can reach temperatures over 2,000°F (1,100°C).",
+                "example": "Basalt rock forms when lava cools quickly."
+            },
+            "volcano": {
+                "definition": "A mountain that can erupt and release magma, ash, and gases",
+                "kid_friendly": "A mountain that can explode or ooze hot rock",
+                "fun_fact": "About 1,500 volcanoes on Earth are considered active.",
+                "example": "Mount St. Helens erupted in Washington State in 1980."
+            },
+            "earthquake": {
+                "definition": "A sudden shaking of Earth's surface caused by tectonic plate movement",
+                "kid_friendly": "When the ground shakes because Earth's plates move",
+                "fun_fact": "Earthquakes can make the ground shift several meters in seconds.",
+                "example": "Earthquakes are common along the Ring of Fire in the Pacific."
+            },
+            "tectonic plates": {
+                "definition": "Large pieces of Earth's crust that move slowly over the mantle",
+                "kid_friendly": "Huge puzzle pieces of Earth's crust that slowly slide around",
+                "fun_fact": "Tectonic plates move about as fast as fingernails grow.",
+                "example": "The Pacific Plate pushes against the North American Plate."
+            },
+            "climate": {
+                "definition": "The long-term pattern of temperature and precipitation in an area",
+                "kid_friendly": "The usual weather a place has year after year",
+                "fun_fact": "Scientists study climate patterns using ice cores from glaciers.",
+                "example": "Rainforests have a warm, wet climate all year long."
+            },
+            "precipitation": {
+                "definition": "Water that falls from the atmosphere as rain, snow, sleet, or hail",
+                "kid_friendly": "Water that falls from clouds to the ground",
+                "fun_fact": "Some storms can drop hailstones the size of baseballs.",
+                "example": "Precipitation replenishes rivers, lakes, and groundwater."
+            },
+            "evaporation": {
+                "definition": "Process where liquid water absorbs energy and becomes water vapor",
+                "kid_friendly": "When water turns into gas and floats into the air",
+                "fun_fact": "Sunlight speeds up evaporation from oceans and puddles.",
+                "example": "Evaporation from oceans drives Earth's water cycle."
+            },
+            "condensation": {
+                "definition": "Process where water vapor cools and turns into liquid water droplets",
+                "kid_friendly": "When water in the air cools and turns back into drops",
+                "fun_fact": "Clouds form when water vapor condenses high in the sky.",
+                "example": "Condensation makes drops on the outside of a cold glass."
+            },
+            "meteorologist": {
+                "definition": "A scientist who studies weather and forecasts atmospheric conditions",
+                "kid_friendly": "A scientist who studies and predicts the weather",
+                "fun_fact": "Meteorologists use satellites and radar to track storms.",
+                "example": "The meteorologist warned the town about the approaching hurricane."
+            },
+            "gravity": {
+                "definition": "The force of attraction between objects that have mass",
+                "kid_friendly": "The pull that keeps us on the ground",
+                "fun_fact": "Gravity on the Moon is only about one-sixth as strong as on Earth.",
+                "example": "Gravity makes dropped objects fall toward Earth's center."
+            },
+            "force": {
+                "definition": "A push or pull that can change an object's motion",
+                "kid_friendly": "Any push or pull on something",
+                "fun_fact": "Forces always come in pairs—equal and opposite reactions.",
+                "example": "Kicking a soccer ball applies force that makes it move."
+            },
+            "friction": {
+                "definition": "A force that resists motion between surfaces that rub together",
+                "kid_friendly": "A force that slows things down when they rub",
+                "fun_fact": "Tires rely on friction to grip the road and stop safely.",
+                "example": "Sliding on ice is easier because there is less friction."
+            },
+            "inertia": {
+                "definition": "The tendency of an object to resist changes in motion",
+                "kid_friendly": "Objects want to keep doing what they are doing",
+                "fun_fact": "Seatbelts help protect people by overcoming inertia in a sudden stop.",
+                "example": "A ball at rest stays still until a force pushes it."
+            },
+            "velocity": {
+                "definition": "Speed of an object in a particular direction",
+                "kid_friendly": "How fast something moves and which way it goes",
+                "fun_fact": "The International Space Station travels at a velocity of 17,500 mph.",
+                "example": "Running north at 5 miles per hour is a velocity."
+            },
+            "acceleration": {
+                "definition": "How quickly velocity changes over time",
+                "kid_friendly": "How fast something speeds up, slows down, or turns",
+                "fun_fact": "Roller coasters use acceleration to create thrilling drops.",
+                "example": "A bike accelerates when you pedal harder uphill."
+            },
+            "mass": {
+                "definition": "The amount of matter in an object",
+                "kid_friendly": "How much stuff is in something",
+                "fun_fact": "Your mass stays the same even if you travel to the Moon.",
+                "example": "A bowling ball has more mass than a basketball."
+            },
+            "density": {
+                "definition": "A measure of how much mass is packed into a certain volume",
+                "kid_friendly": "How tightly packed the matter in something is",
+                "fun_fact": "Oil floats on water because it is less dense.",
+                "example": "Ice is less dense than liquid water, so ice cubes float."
+            },
+            "temperature": {
+                "definition": "A measure of how hot or cold something is",
+                "kid_friendly": "How warm or chilly something feels",
+                "fun_fact": "The Sun’s surface temperature is about 5,500°C.",
+                "example": "A thermometer measures air temperature every day."
+            },
+            "conduction": {
+                "definition": "Transfer of heat through direct contact between materials",
+                "kid_friendly": "Heat moving when things touch",
+                "fun_fact": "Metals conduct heat faster than wood or plastic.",
+                "example": "A metal spoon in hot soup warms up by conduction."
+            },
+            "convection": {
+                "definition": "Transfer of heat by the movement of fluids like air or water",
+                "kid_friendly": "Heat moving because liquids or gases move",
+                "fun_fact": "Convection currents in Earth's mantle help move tectonic plates.",
+                "example": "Warm air rising and cool air sinking creates convection currents."
+            },
+            "radiation": {
+                "definition": "Transfer of energy through space by electromagnetic waves",
+                "kid_friendly": "Heat traveling in waves, even through space",
+                "fun_fact": "Sunlight warms Earth by radiation across 93 million miles.",
+                "example": "Feeling heat from a fire without touching it is radiation."
+            },
+            "orbit": {
+                "definition": "The curved path of an object around a star, planet, or moon",
+                "kid_friendly": "The path things take when they move around in space",
+                "fun_fact": "Earth completes one orbit around the Sun every 365 days.",
+                "example": "Satellites orbit Earth and send GPS signals."
+            },
+            "rotation": {
+                "definition": "The spinning of an object around its axis",
+                "kid_friendly": "When something spins around like a top",
+                "fun_fact": "Earth’s rotation causes day and night every 24 hours.",
+                "example": "Planets rotate while they orbit the Sun."
+            },
+            "galaxy": {
+                "definition": "A huge system of stars, gas, and dust held together by gravity",
+                "kid_friendly": "A giant family of stars held together in space",
+                "fun_fact": "The Milky Way galaxy may contain over 100 billion planets.",
+                "example": "Our Solar System is located in the Milky Way galaxy."
+            },
+            "nebula": {
+                "definition": "A cloud of gas and dust in space where stars can form",
+                "kid_friendly": "A big cloud of space dust where new stars are born",
+                "fun_fact": "Some nebulae glow with beautiful colors from ionized gases.",
+                "example": "The Orion Nebula is visible with a small telescope."
+            },
+            "comet": {
+                "definition": "A ball of ice and dust that orbits the Sun and forms a tail when heated",
+                "kid_friendly": "A space rock made of ice that grows a tail near the Sun",
+                "fun_fact": "A comet’s tail always points away from the Sun because of solar wind.",
+                "example": "Halley's Comet visits Earth's skies about every 76 years."
+            },
+            "asteroid": {
+                "definition": "A rocky object orbiting the Sun, mostly between Mars and Jupiter",
+                "kid_friendly": "A space rock that travels around the Sun",
+                "fun_fact": "The largest asteroid, Ceres, is big enough to be a dwarf planet.",
+                "example": "Many asteroids orbit in the asteroid belt."
+            },
+            "nutrient": {
+                "definition": "A substance needed by organisms to live and grow",
+                "kid_friendly": "Something in food that helps living things grow",
+                "fun_fact": "Plants take in nutrients from soil and water through their roots.",
+                "example": "Nitrogen is a nutrient that plants use to make proteins."
+            },
+            "fertilizer": {
+                "definition": "Material added to soil to supply nutrients for plants",
+                "kid_friendly": "Food for plants that helps them grow better",
+                "fun_fact": "Compost is a natural fertilizer made from decayed plants and scraps.",
+                "example": "Gardeners add fertilizer to soil to boost plant growth."
+            },
+            "pollination": {
+                "definition": "Movement of pollen so plants can form seeds and fruits",
+                "kid_friendly": "When pollen moves so plants can make seeds",
+                "fun_fact": "Bees, butterflies, and even bats help pollinate plants.",
+                "example": "Wind pollination helps corn plants produce kernels."
             },
 
             # Ecology
@@ -314,32 +518,59 @@ class SmartContentEngine:
 
         return clue
 
-    def generate_vocabulary_words(self, topic: str, count: int = 15) -> List[str]:
-        """Generate relevant vocabulary words for a topic"""
-        # Topic-based word selection
+    def generate_vocabulary_words(
+        self,
+        topic: str,
+        count: int = 15,
+        vocabulary_pool: Optional[List[str]] = None,
+        topics: Optional[List[str]] = None,
+    ) -> List[str]:
+        """Generate relevant vocabulary words for a topic or NGSS standard context."""
         topic_keywords = {
             "cell": ["cell", "nucleus", "mitochondria", "chloroplast", "membrane", "cytoplasm", "ribosome", "vacuole", "dna", "protein"],
             "energy": ["energy", "atp", "photosynthesis", "respiration", "glucose", "oxygen", "mitochondria", "chloroplast"],
             "ecosystem": ["ecosystem", "habitat", "adaptation", "predator", "prey", "producer", "consumer", "organism"],
             "matter": ["matter", "atom", "molecule", "energy", "protein", "dna"],
             "organ": ["organ", "system", "tissue", "cell", "organism"],
+            "earth": [
+                "weathering", "erosion", "sediment", "rock", "soil", "water",
+                "climate", "precipitation", "evaporation", "condensation",
+                "volcano", "earthquake", "tectonic plates", "magma", "lava"
+            ],
+            "weather": ["meteorologist", "precipitation", "evaporation", "condensation", "climate", "temperature"],
+            "space": ["planet", "star", "galaxy", "orbit", "gravity", "astronaut", "telescope", "comet", "asteroid", "nebula"],
+            "force": ["force", "motion", "gravity", "friction", "inertia", "velocity", "acceleration", "mass"],
         }
 
-        # Find matching topic keywords
-        words = []
+        candidate_words = set()
+
+        def _add_words(words: List[str]):
+            for raw_word in words:
+                cleaned = ''.join(ch for ch in raw_word if ch.isalpha())
+                if cleaned and len(cleaned) >= 3:
+                    candidate_words.add(cleaned.lower())
+
+        if vocabulary_pool:
+            _add_words(vocabulary_pool)
+
+        if topics:
+            for topic_name in topics:
+                lowered = topic_name.lower()
+                for key, words in topic_keywords.items():
+                    if key in lowered:
+                        _add_words(words)
+
         topic_lower = topic.lower()
-
-        for key, word_list in topic_keywords.items():
+        for key, words in topic_keywords.items():
             if key in topic_lower:
-                words.extend(word_list)
+                _add_words(words)
 
-        # If no match, use all words
-        if not words:
-            words = list(self.vocab_database.keys())
+        if not candidate_words:
+            _add_words(list(self.vocab_database.keys()))
 
-        # Shuffle and return requested count
-        random.shuffle(words)
-        return words[:count]
+        words_list = list(candidate_words)
+        random.shuffle(words_list)
+        return words_list[:count]
 
     def generate_scenario(self, topic: str, grade_level: str, theme: str = None) -> str:
         """Generate an engaging scenario"""

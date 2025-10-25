@@ -57,6 +57,17 @@ except ImportError as e:
     print(f"True/false generator not available: {e}")
     generate_true_false = None
 
+FORMAT_GENERATORS = {
+    'crossword': generate_crossword,
+    'word-search': generate_word_search,
+    'matching': generate_matching,
+    'fill-blank': generate_fill_in_blank,
+    'short-answer': generate_short_answer,
+    'true-false': generate_true_false,
+}
+
+AVAILABLE_FORMAT_IDS = {fmt_id for fmt_id, func in FORMAT_GENERATORS.items() if callable(func)}
+
 app = Flask(__name__)
 app.config['OUTPUT_FOLDER'] = os.path.join(os.path.dirname(__file__), 'output')
 
@@ -64,12 +75,48 @@ app.config['OUTPUT_FOLDER'] = os.path.join(os.path.dirname(__file__), 'output')
 os.makedirs(app.config['OUTPUT_FOLDER'], exist_ok=True)
 
 
+def verify_runtime_environment():
+    """Emit warnings for missing optional runtime prerequisites."""
+    try:
+        from PIL import ImageFont  # pylint: disable=import-error
+    except Exception as exc:  # Pillow not available should fail earlier, but be explicit.
+        print("WARNING: Pillow is not installed or failed to import.", file=sys.stderr)
+        print(f"         Worksheet generation will not function: {exc}", file=sys.stderr)
+        return
+
+    font_candidates = [
+        "arial.ttf",
+        "Arial.ttf",
+        "DejaVuSans.ttf",
+        "LiberationSans-Regular.ttf",
+    ]
+
+    for font_name in font_candidates:
+        try:
+            ImageFont.truetype(font_name, 40)
+            return
+        except OSError:
+            continue
+
+    print("WARNING: No common TrueType fonts were found (looked for Arial/DejaVu Sans).", file=sys.stderr)
+    print("         Generated worksheets will fall back to Pillow's default bitmap font", file=sys.stderr)
+    print("         which is lower quality. Install a TrueType font and restart.", file=sys.stderr)
+
+
 @app.route('/')
 def index():
     """Main page"""
-    return render_template('index.html',
-                          worksheet_formats=WORKSHEET_FORMATS,
-                          ngss_standards=NGSS_STANDARDS)
+    formats = []
+    for fmt in WORKSHEET_FORMATS:
+        fmt_copy = fmt.copy()
+        fmt_copy['available'] = fmt['id'] in AVAILABLE_FORMAT_IDS
+        formats.append(fmt_copy)
+
+    return render_template(
+        'index.html',
+        worksheet_formats=formats,
+        ngss_standards=NGSS_STANDARDS
+    )
 
 
 @app.route('/generate', methods=['POST'])
@@ -101,22 +148,14 @@ def generate():
             f'{worksheet_format}_{standard_code}_{timestamp}.png'
         )
 
-        # Generate worksheet based on format
-        if worksheet_format == 'crossword':
-            generate_crossword(standard_data, grade_level, output_filename)
-        elif worksheet_format == 'word-search':
-            generate_word_search(standard_data, grade_level, output_filename)
-        elif worksheet_format == 'matching':
-            generate_matching(standard_data, grade_level, output_filename)
-        elif worksheet_format == 'fill-blank' and generate_fill_in_blank:
-            generate_fill_in_blank(standard_data, grade_level, output_filename)
-        elif worksheet_format == 'short-answer' and generate_short_answer:
-            generate_short_answer(standard_data, grade_level, output_filename)
-        elif worksheet_format == 'true-false' and generate_true_false:
-            generate_true_false(standard_data, grade_level, output_filename)
-        else:
-            # Default to word search if format not implemented
-            generate_word_search(standard_data, grade_level, output_filename)
+        generator = FORMAT_GENERATORS.get(worksheet_format)
+        if not callable(generator):
+            return jsonify({
+                'success': False,
+                'error': f"Worksheet format '{worksheet_format}' is not available yet."
+            }), 400
+
+        generator(standard_data, grade_level, output_filename)
 
         answer_key_filename = output_filename.replace('.png', '_ANSWER_KEY.png')
 
@@ -165,5 +204,7 @@ if __name__ == '__main__':
     print("\nOpen your browser and go to: http://localhost:3000")
     print("\nPress Ctrl+C to stop the server")
     print("=" * 70)
+
+    verify_runtime_environment()
 
     app.run(debug=True, host='127.0.0.1', port=3000)

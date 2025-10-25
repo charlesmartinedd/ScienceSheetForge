@@ -76,7 +76,12 @@ def generate_true_false(standard_data, grade_level, output_filename="true_false.
 
     # Generate vocabulary
     print("   Generating statements...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=15)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=15,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Create true/false statements
     statements = []

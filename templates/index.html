@@ -112,6 +112,26 @@
             text-align: center;
         }
 
+        .card.disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .card-status {
+            margin-top: 16px;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .card:hover {
             border-color: #3498db;
             transform: translateY(-5px);
@@ -420,20 +440,34 @@
             grid.innerHTML = '';
 
             worksheetFormats.forEach(format => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.format = format.id;
-                card.innerHTML = `
-                    <div class="card-icon">${format.icon}</div>
-                    <div class="card-title">${format.name}</div>
-                    <div class="card-description">${format.description}</div>
-                `;
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('#formatsGrid .card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    selectedFormat = format.id;
-                    document.getElementById('step3Next').disabled = false;
-                });
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.dataset.format = format.id;
+            card.innerHTML = `
+                <div class="card-icon">${format.icon}</div>
+                <div class="card-title">${format.name}</div>
+                <div class="card-description">${format.description}</div>
+            `;
+            const isAvailable = !!format.available;
+
+            if (!isAvailable) {
+                card.classList.add('disabled');
+                card.setAttribute('aria-disabled', 'true');
+                card.title = 'Coming soon';
+                card.innerHTML += `<div class="card-status">Coming Soon</div>`;
+            } else {
+                card.title = 'Select worksheet format';
+            }
+
+            card.addEventListener('click', () => {
+                if (!isAvailable) {
+                    return;
+                }
+                document.querySelectorAll('#formatsGrid .card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedFormat = format.id;
+                document.getElementById('step3Next').disabled = false;
+            });
                 grid.appendChild(card);
             });
         }

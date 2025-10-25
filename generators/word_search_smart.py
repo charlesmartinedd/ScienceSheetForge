@@ -76,7 +76,12 @@ def generate_word_search(standard_data, grade_level, output_filename="word_searc
 
     # Generate vocabulary
     print("   Generating vocabulary...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=15)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=15,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Select 10-12 words for word search
     selected_words = [w for w in vocabulary if len(w) >= 3][:12]
@@ -86,30 +91,69 @@ def generate_word_search(standard_data, grade_level, output_filename="word_searc
 
     # Create grid
     grid_size = 15
-    grid = [[random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ') for _ in range(grid_size)]
-            for _ in range(grid_size)]
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    grid = [[' ' for _ in range(grid_size)] for _ in range(grid_size)]
 
-    # Place words
+    def can_place(word_to_place, row_idx, col_idx, direction):
+        for offset, letter in enumerate(word_to_place):
+            r, c = row_idx, col_idx
+            if direction == 'H':
+                c += offset
+            elif direction == 'V':
+                r += offset
+            else:  # Diagonal
+                r += offset
+                c += offset
+
+            if r >= grid_size or c >= grid_size:
+                return False
+
+            existing = grid[r][c]
+            if existing not in (' ', letter):
+                return False
+        return True
+
+    def place_word(word_to_place, row_idx, col_idx, direction):
+        for offset, letter in enumerate(word_to_place):
+            r, c = row_idx, col_idx
+            if direction == 'H':
+                c += offset
+            elif direction == 'V':
+                r += offset
+            else:
+                r += offset
+                c += offset
+            grid[r][c] = letter
+
+    directions = ['H', 'V', 'D']
     placed_words = []
     for word in selected_words:
-        attempts = 0
-        while attempts < 50:
-            direction = random.choice(['H', 'V', 'D'])
+        placed = False
+        for _ in range(100):
+            direction = random.choice(directions)
             if direction == 'H':
                 row = random.randint(0, grid_size - 1)
                 col = random.randint(0, grid_size - len(word))
-                for i, letter in enumerate(word):
-                    grid[row][col + i] = letter
-                placed_words.append(word)
-                break
             elif direction == 'V':
                 row = random.randint(0, grid_size - len(word))
                 col = random.randint(0, grid_size - 1)
-                for i, letter in enumerate(word):
-                    grid[row + i][col] = letter
+            else:
+                row = random.randint(0, grid_size - len(word))
+                col = random.randint(0, grid_size - len(word))
+
+            if can_place(word, row, col, direction):
+                place_word(word, row, col, direction)
                 placed_words.append(word)
+                placed = True
                 break
-            attempts += 1
+
+        if not placed:
+            print(f"   Warning: could not place '{word}' in word search grid")
+
+    for row in range(grid_size):
+        for col in range(grid_size):
+            if grid[row][col] == ' ':
+                grid[row][col] = random.choice(alphabet)
 
     print(f"   Placed {len(placed_words)} words in grid")
 
@@ -183,6 +227,42 @@ def generate_word_search(standard_data, grade_level, output_filename="word_searc
 
         draw.text((x_pos + checkbox_size + 15, y_pos), word.title(), fill='#2c3e50', font=text_font)
 
+    rows_used = (len(placed_words) + 2) // 3
+    fun_fact_y = list_y + rows_used * 70 + 120
+
+    fun_facts = []
+    for word in placed_words:
+        fact = content.get_fun_fact(word)
+        if fact:
+            fun_facts.append((word.title(), fact))
+    fun_facts = fun_facts[:3]
+
+    if fun_facts:
+        draw.rectangle([150, fun_fact_y - 30, width-150, fun_fact_y - 25], fill='#9b59b6')
+        draw.rectangle([150, fun_fact_y, width-150, fun_fact_y + 90],
+                       fill='#ecf0f1', outline='#8e44ad', width=3)
+        bbox = draw.textbbox((0, 0), "Did You Know?", font=header_font)
+        title_width = bbox[2] - bbox[0]
+        draw.text(((width - title_width) // 2, fun_fact_y + 15), "Did You Know?", fill='#2c3e50', font=header_font)
+
+        fact_text_y = fun_fact_y + 120
+        for word_title, fact in fun_facts:
+            full_text = f"{word_title}: {fact}"
+            words = full_text.split()
+            current_line = []
+            for token in words:
+                test_line = ' '.join(current_line + [token])
+                bbox = draw.textbbox((0, 0), test_line, font=small_font)
+                if bbox[2] - bbox[0] <= (width - 360):
+                    current_line.append(token)
+                else:
+                    draw.text((180, fact_text_y), ' '.join(current_line), fill='#2c3e50', font=small_font)
+                    fact_text_y += 55
+                    current_line = [token]
+            if current_line:
+                draw.text((180, fact_text_y), ' '.join(current_line), fill='#2c3e50', font=small_font)
+                fact_text_y += 80
+
     # FOOTER
     footer_y = height - 100
     draw.rectangle([120, footer_y - 10, width-120, footer_y + 60],
@@ -208,6 +288,7 @@ def generate_answer_key(words, standard_data, grade_level, output_filename):
     width, height = 2550, 3300
     answer_key = Image.new('RGB', (width, height), 'white')
     draw = ImageDraw.Draw(answer_key)
+    content = get_smart_content()
 
     try:
         title_font = ImageFont.truetype("arial.ttf", 100)
@@ -262,6 +343,42 @@ def generate_answer_key(words, standard_data, grade_level, output_filename):
         draw.text((x_pos + 10, y_pos + 5), "V", fill='white', font=text_font)
 
         draw.text((x_pos + 55, y_pos + 3), word.upper(), fill='#2c3e50', font=text_font)
+
+    rows_used = (len(words) + 2) // 3
+    fun_fact_y = list_y + rows_used * 70 + 120
+
+    fun_facts = []
+    for word in words:
+        fact = content.get_fun_fact(word)
+        if fact:
+            fun_facts.append((word.title(), fact))
+    fun_facts = fun_facts[:3]
+
+    if fun_facts:
+        draw.rectangle([150, fun_fact_y - 30, width-150, fun_fact_y - 25], fill='#27ae60')
+        draw.rectangle([150, fun_fact_y, width-150, fun_fact_y + 90],
+                       fill='#ecf0f1', outline='#229954', width=3)
+        bbox = draw.textbbox((0, 0), "Fun Science Facts", font=header_font)
+        title_width = bbox[2] - bbox[0]
+        draw.text(((width - title_width) // 2, fun_fact_y + 15), "Fun Science Facts", fill='#2c3e50', font=header_font)
+
+        fact_text_y = fun_fact_y + 120
+        for word_title, fact in fun_facts:
+            full_text = f"{word_title}: {fact}"
+            words = full_text.split()
+            current_line = []
+            for token in words:
+                test_line = ' '.join(current_line + [token])
+                bbox = draw.textbbox((0, 0), test_line, font=small_font)
+                if bbox[2] - bbox[0] <= (width - 360):
+                    current_line.append(token)
+                else:
+                    draw.text((180, fact_text_y), ' '.join(current_line), fill='#2c3e50', font=small_font)
+                    fact_text_y += 55
+                    current_line = [token]
+            if current_line:
+                draw.text((180, fact_text_y), ' '.join(current_line), fill='#2c3e50', font=small_font)
+                fact_text_y += 80
 
     # FOOTER
     footer_y = height - 100

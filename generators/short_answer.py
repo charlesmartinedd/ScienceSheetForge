@@ -75,7 +75,12 @@ def generate_short_answer(standard_data, grade_level, output_filename="short_ans
 
     # Generate vocabulary
     print("   Generating questions...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=8)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=8,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Create questions
     questions = []

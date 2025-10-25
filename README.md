@@ -30,6 +30,7 @@ ScienceSheetForge is an intelligent worksheet generator that creates **professio
 
 - Python 3.8 or higher
 - pip (Python package manager)
+- A TrueType font such as Arial or DejaVu Sans available to Pillow for consistent print quality output
 
 ### Installation
 
@@ -47,7 +48,7 @@ python app.py
 
 ### Usage
 
-1. Open your browser to `http://localhost:5555`
+1. Open your browser to `http://localhost:3000`
 2. Select grade level (K-2, 3-5, or 6-8)
 3. Choose an NGSS standard
 4. Pick a worksheet format

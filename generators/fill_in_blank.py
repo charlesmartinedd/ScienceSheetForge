@@ -75,7 +75,12 @@ def generate_fill_in_blank(standard_data, grade_level, output_filename="fill_in_
 
     # Generate vocabulary
     print("   Generating vocabulary...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=12)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=12,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Create sentences with blanks
     sentences = []

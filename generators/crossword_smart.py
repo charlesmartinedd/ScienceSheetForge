@@ -76,7 +76,12 @@ def generate_crossword_tpt_style(standard_data, grade_level, output_filename="cr
 
     # Generate vocabulary
     print("   Generating vocabulary...")
-    vocabulary = content.generate_vocabulary_words(standard_data['title'], count=15)
+    vocabulary = content.generate_vocabulary_words(
+        standard_data['title'],
+        count=15,
+        vocabulary_pool=standard_data.get('vocabulary'),
+        topics=standard_data.get('topics'),
+    )
 
     # Generate clues
     print("   Generating smart clues...")
@@ -127,7 +132,7 @@ def generate_crossword_tpt_style(standard_data, grade_level, output_filename="cr
                             new_row = existing['row'] - i
                             new_col = existing['col'] + j
 
-                            if new_row >= 0 and new_row + len(word_upper) < grid_size:
+                            if new_row >= 0 and new_row + len(word_upper) <= grid_size:
                                 can_place = all(
                                     grid[new_row + k][new_col] in [' ', word_upper[k]]
                                     for k in range(len(word_upper))
@@ -151,7 +156,7 @@ def generate_crossword_tpt_style(standard_data, grade_level, output_filename="cr
                             new_row = existing['row'] + j
                             new_col = existing['col'] - i
 
-                            if new_col >= 0 and new_col + len(word_upper) < grid_size:
+                            if new_col >= 0 and new_col + len(word_upper) <= grid_size:
                                 can_place = all(
                                     grid[new_row][new_col + k] in [' ', word_upper[k]]
                                     for k in range(len(word_upper))
@@ -173,6 +178,9 @@ def generate_crossword_tpt_style(standard_data, grade_level, output_filename="cr
                                     break
                 if placed:
                     break
+
+        if not placed:
+            print(f"   Warning: could not place '{word}' in crossword grid")
 
     print(f"   Placed {len(placements)} words in grid")
 
