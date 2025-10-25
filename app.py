@@ -162,8 +162,8 @@ if __name__ == '__main__':
     print("SCIENCESHEETFORGE - Modern Worksheet Generator")
     print("=" * 70)
     print("\nStarting local server...")
-    print("\nOpen your browser and go to: http://localhost:8080")
+    print("\nOpen your browser and go to: http://localhost:3000")
     print("\nPress Ctrl+C to stop the server")
     print("=" * 70)
 
-    app.run(debug=True, host='127.0.0.1', port=8080)
+    app.run(debug=True, host='127.0.0.1', port=3000)
